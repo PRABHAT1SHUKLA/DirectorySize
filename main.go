@@ -7,6 +7,10 @@ import (
 	"path/filepath" // For walking directory trees
 	// "strconv" // REMOVED: This import is no longer needed as we don't use strconv.Atoi or similar here.
 )
+//new thing here
+
+Some 
+
 
 // humanReadableBytes converts bytes to a human-readable string (KB, MB, GB, etc.)
 func humanReadableBytes(bytes int64) string {
@@ -32,28 +36,7 @@ func humanReadableBytes(bytes int64) string {
 }
 
 func main() {
-	// 1. Check for command-line arguments
-	if len(os.Args) < 2 {
-		fmt.Println("Usage: go run main.go <directory_path>")
-		fmt.Println("Example: go run main.go .") // '.' means current directory
-		fmt.Println("Example: go run main.go /path/to/my/folder")
-		os.Exit(1) // Exit with a non-zero status code to indicate an error
-	}
-
-	// Get the directory path from the command-line argument
-	targetDir := os.Args[1]
-
-	// 2. Start the calculation
-	fmt.Printf("Calculating size for '%s'...\n", targetDir)
-
-	totalSize, err := calculateDirSize(targetDir)
-	if err != nil {
-		fmt.Printf("Error calculating size: %v\n", err)
-		os.Exit(1)
-	}
-
-	// 3. Print the result
-	fmt.Printf("Total size of '%s': %s (%d bytes)\n", targetDir, humanReadableBytes(totalSize), totalSize)
+	fmt.Println("Hello, World!")
 }
 
 // calculateDirSize recursively calculates the total size of files in a directory.
