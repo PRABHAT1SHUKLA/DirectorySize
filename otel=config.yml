@@ -1,0 +1,25 @@
+receivers:
+  hostmetrics:
+    collection_interval: 10s  # How often to collect metrics (every 10 seconds)
+    scrapers:
+      cpu: {}  # CPU usage
+      memory: {}  # Memory usage
+      disk: {}  # Disk I/O
+      load: {}  # System load
+      filesystem: {}  # Filesystem usage
+      network: {}  # Network activity
+      paging: {}  # Paging/swapping
+
+processors:
+  batch: {}  # Batches data for efficiency
+
+exporters:
+  prometheus:
+    endpoint: "0.0.0.0:8889"  # Exposes metrics on port 8888 for Prometheus to scrape
+
+service:
+  pipelines:
+    metrics:
+      receivers: [hostmetrics]
+      processors: [batch]
+      exporters: [prometheus]
