@@ -1,0 +1,58 @@
+package main
+
+import (
+	"fmt"
+	"math/rand"
+	"sync"
+	"time"
+)
+
+// The worker function simulates a time-consuming task, like processing data.
+func worker(id int, jobs <-chan int, results chan<- int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	for j := range jobs {
+		fmt.Printf("Worker %d started processing job %d\n", id, j)
+		// Simulate a time-consuming task
+		sleepDuration := time.Duration(rand.Intn(1000)) * time.Millisecond
+		time.Sleep(sleepDuration)
+		fmt.Printf("Worker %d finished job %d (slept for %v)\n", id, j, sleepDuration)
+		results <- j * 2 // Send the result back through the results channel
+	}
+}
+
+func main() {
+	const numJobs = 9
+	const numWorkers = 3
+
+	// Create buffered channels for jobs and results
+	jobs := make(chan int, numJobs)
+	results := make(chan int, numJobs)
+
+	// Use a WaitGroup to wait for all workers to finish
+	var wg sync.WaitGroup
+
+	// Start worker goroutines
+	for w := 1; w <= numWorkers; w++ {
+		wg.Add(1)
+		go worker(w, jobs, results, &wg)
+	}
+
+	// Send jobs to the jobs channel
+	for j := 1; j <= numJobs; j++ {
+		jobs <- j
+	}
+	close(jobs)
+
+	// Wait for all workers to complete their work
+	wg.Wait()
+
+	// Collect and print all the results
+	fmt.Println("\nAll jobs processed. Collecting results...")
+	for i := 1; i <= numJobs; i++ {
+		result := <-results
+		fmt.Printf("Received result from job: %d\n", result)
+	}
+
+	close(results)
+	fmt.Println("\nProgram finished.")
+}
